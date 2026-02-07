@@ -1,98 +1,112 @@
 from pygame import *
 from .constants import *
-from .board import *
 
-def draw_menu(screen, bg):
+def draw_menu(screen):
+    screen.fill(BG_COLOR)
 
-    screen.blit(bg, (0, 0))
+    # Draw Title
+    try:
+        title_font = pygame.font.SysFont("Arial", 60, bold=True)
+    except:
+        title_font = pygame.font.Font(None, 60)
+    
+    title_text = title_font.render("Neutreeko", True, TEXT_COLOR)
+    title_rect = title_text.get_rect(center=(window_width // 2, 100))
+    screen.blit(title_text, title_rect)
 
-    #Button colors
-    button_color = (128, 210, 242)
-    button_hover_color = (184, 200, 209)
-
-    #Draw buttons
+    # Draw buttons
     button_y = BUTTON_Y_START
     for mode in ["Player x Player", "Player x AI", "AI x AI"]:
         button_rect = pygame.Rect(BUTTON_X, button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-        pygame.draw.rect(screen, button_color, button_rect, 0, 30)
-
-        #Check if mouse is hovering over the button
+        
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        if button_rect.collidepoint(mouse_x, mouse_y):
-            pygame.draw.rect(screen, button_hover_color, button_rect, 0, 30)
+        color = BUTTON_HOVER_COLOR if button_rect.collidepoint(mouse_x, mouse_y) else BUTTON_COLOR
+        
+        pygame.draw.rect(screen, color, button_rect, border_radius=15)
 
-        #Render button text
-        font = pygame.font.Font('./Assets/Starborn.ttf', 40)
-        text = font.render(mode, True, (255, 255, 255))
+        # Render button text
+        try:
+            font = pygame.font.SysFont("Arial", 40)
+        except:
+            font = pygame.font.Font(None, 40)
+            
+        text = font.render(mode, True, TEXT_COLOR)
         text_rect = text.get_rect(center=button_rect.center) 
         screen.blit(text, text_rect)
 
         button_y += BUTTON_HEIGHT + BUTTON_GAP
     
-    character_x = 5
-    character_y = (window_height - Tia.get_height()) //  2
-    screen.blit(Tia, (character_x, character_y))
-
     pygame.time.wait(10)
     pygame.display.flip()
 
-def draw_difficulty_menu(screen, bg):
+def draw_difficulty_menu(screen):
+    screen.fill(BG_COLOR)
 
-    screen.blit(bg, (0, 0))
+    # Draw Title
+    try:
+        title_font = pygame.font.SysFont("Arial", 50, bold=True)
+    except:
+        title_font = pygame.font.Font(None, 50)
+        
+    title_text = title_font.render("Select Difficulty", True, TEXT_COLOR)
+    title_rect = title_text.get_rect(center=(window_width // 2, 100))
+    screen.blit(title_text, title_rect)
 
-    #Difficulty button colors
-    button_color = (128, 210, 242)
-    button_hover_color = (184, 200, 209)
-
-    #Draw  difficulty buttons
+    # Draw difficulty buttons
     button_y = BUTTON_Y_START
     for mode in ["Easy", "Medium", "Hard"]:
         button_rect = pygame.Rect(BUTTON_X, button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-        pygame.draw.rect(screen, button_color, button_rect, 0, 30)
-
-        #Check if mouse is hovering over the button
+        
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        if button_rect.collidepoint(mouse_x, mouse_y):
-            pygame.draw.rect(screen, button_hover_color, button_rect, 0, 30)
+        color = BUTTON_HOVER_COLOR if button_rect.collidepoint(mouse_x, mouse_y) else BUTTON_COLOR
+        
+        pygame.draw.rect(screen, color, button_rect, border_radius=15)
 
-        #Render button text
-        font = pygame.font.Font('./Assets/Starborn.ttf', 40)
-        text = font.render(mode, True, (255, 255, 255))
+        # Render button text
+        try:
+            font = pygame.font.SysFont("Arial", 40)
+        except:
+            font = pygame.font.Font(None, 40)
+
+        text = font.render(mode, True, TEXT_COLOR)
         text_rect = text.get_rect(center=button_rect.center) 
         screen.blit(text, text_rect)
 
         button_y += BUTTON_HEIGHT + BUTTON_GAP
     
-    character_x = 5
-    character_y = (window_height - Tia.get_height()) //  2
-    screen.blit(Tia, (character_x, character_y))
-
     pygame.time.wait(10)
     pygame.display.flip()
 
-def draw_AI_difficulty_menu(screen, bg, ai_label):
+def draw_AI_difficulty_menu(screen, ai_label):
     running = True
-    while running:
-        screen.blit(bg, (0, 0))
-        
-        #Difficulty button colors
-        button_color = (128, 210, 242)
-        button_hover_color = (184, 200, 209)
+    selected_difficulty = None
+    
+    # Pre-load font
+    try:
+        font = pygame.font.SysFont("Arial", 40)
+        title_font = pygame.font.SysFont("Arial", 50, bold=True)
+    except:
+        font = pygame.font.Font(None, 40)
+        title_font = pygame.font.Font(None, 50)
 
-        #Draw  difficulty buttons
+    while running:
+        screen.fill(BG_COLOR)
+        
+        title_text = title_font.render(f"Difficulty for {ai_label}", True, TEXT_COLOR)
+        title_rect = title_text.get_rect(center=(window_width // 2, 100))
+        screen.blit(title_text, title_rect)
+
+        # Draw difficulty buttons
         button_y = BUTTON_Y_START
         for diff in ["Easy", "Medium", "Hard"]:
             button_rect = pygame.Rect(BUTTON_X, button_y, BUTTON_WIDTH, BUTTON_HEIGHT)
-            pygame.draw.rect(screen, button_color, button_rect, 0, 30)
-
-            #Check if mouse is hovering over the button
+            
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            if button_rect.collidepoint(mouse_x, mouse_y):
-                pygame.draw.rect(screen, button_hover_color, button_rect, 0, 30)
+            color = BUTTON_HOVER_COLOR if button_rect.collidepoint(mouse_x, mouse_y) else BUTTON_COLOR
+            
+            pygame.draw.rect(screen, color, button_rect, border_radius=15)
 
-            #Render button text
-            font = pygame.font.Font('./Assets/Starborn.ttf', 40)
-            text = font.render(f"{ai_label} - {diff}", True, (255, 255, 255))
+            text = font.render(diff, True, TEXT_COLOR)
             text_rect = text.get_rect(center=button_rect.center) 
             screen.blit(text, text_rect)
 
@@ -101,8 +115,8 @@ def draw_AI_difficulty_menu(screen, bg, ai_label):
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
-                return
-            elif event. type == MOUSEBUTTONDOWN:
+                return None
+            elif event.type == MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if BUTTON_X <= mouseX <= BUTTON_X + BUTTON_WIDTH:
                     for i, difficulty in enumerate(["Easy", "Medium", "Hard"]):
@@ -111,10 +125,7 @@ def draw_AI_difficulty_menu(screen, bg, ai_label):
                             selected_difficulty = difficulty
                             running = False
                             break
-        character_x = 5
-        character_y = (window_height - Tia.get_height()) //  2
-        screen.blit(Tia, (character_x, character_y))
-
+        
         pygame.time.wait(10)
         pygame.display.flip()
 

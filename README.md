@@ -21,8 +21,8 @@ Ensure you have the following installed on your system:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/GuilhermeKotchergenko/ElementosIACD.git
-    cd ElementosIACD
+    git clone https://github.com/GuilhermeKotchergenko/Neutreeko-Minimax.git
+    cd Neutreeko-Minimax
     ```
 
 2.  **Install dependencies**:

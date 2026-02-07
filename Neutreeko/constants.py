@@ -1,27 +1,29 @@
 import pygame
 
-#window/board
+# Window & Board Dimensions
 window_width, window_height = 1280, 800
 board_width, board_height = 680, 680
 rows, cols = 5, 5
-square_size = board_width//cols
-board_x = (window_width - board_width) // 1.2
+square_size = board_width // cols
+board_x = (window_width - board_width) // 2
 board_y = (window_height - board_height) // 2
 
-#colors
-board_color = (237, 169, 90)
-move_color = (255, 255, 255)
-white = (255, 255, 255)
-black = (0, 0, 0)
+# Neutral Color Palette
+BG_COLOR = (44, 62, 80)          # Dark Blue-Grey
+BOARD_COLOR = (236, 240, 241)    # Off-White / Light Grey
+GRID_COLOR = (149, 165, 166)     # Grey for grid lines
+BUTTON_COLOR = (52, 152, 219)    # Blue
+BUTTON_HOVER_COLOR = (41, 128, 185) # Darker Blue
+TEXT_COLOR = (255, 255, 255)     # White
+PIECE_WHITE = (236, 240, 241)    # White pieces
+PIECE_BLACK = (44, 62, 80)       # Black pieces (matching BG for contrast on board)
+HIGHLIGHT_COLOR = (46, 204, 113) # Green for valid moves
 
-#icon
-icon = pygame.image.load('./Assets/Logo32.png')
-
-#Button
-BUTTON_WIDTH = 450
-BUTTON_HEIGHT = 100
-BUTTON_GAP = 50
-BUTTON_X = (window_width - BUTTON_WIDTH) // 1.5
+# Button Dimensions
+BUTTON_WIDTH = 400
+BUTTON_HEIGHT = 80
+BUTTON_GAP = 30
+BUTTON_X = (window_width - BUTTON_WIDTH) // 2
 BUTTON_Y_START = 200
 
 
