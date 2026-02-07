@@ -1,4 +1,4 @@
-import pygame
+
 
 # Window & Board Dimensions
 window_width, window_height = 1280, 800

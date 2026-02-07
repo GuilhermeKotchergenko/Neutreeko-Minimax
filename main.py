@@ -1,5 +1,5 @@
 import pygame
-from time import sleep
+
 from Neutreeko.constants import *
 from Neutreeko.piece import *
 from Neutreeko.board import *
@@ -17,12 +17,7 @@ def main():
     screen = pygame.display.set_mode((window_width, window_height))
     pygame.display.set_caption("Neutreeko AI")
     
-    # Removed background image loading
-    
-    # Icon handling - standard or removed if asset is gone. 
-    # For now, let's comment out icon setting to avoid crash if file is gone, 
-    # or just use default pygame icon.
-    # pygame.display.set_icon(icon) 
+
 
     clock = pygame.time.Clock()
     FPS = 30 # Increased FPS for smoother feel

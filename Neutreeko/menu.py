@@ -1,4 +1,5 @@
-from pygame import *
+import pygame
+from pygame.locals import *
 from .constants import *
 
 def draw_menu(screen):

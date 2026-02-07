@@ -1,4 +1,4 @@
-from pygame import *
+
 from .constants import *
 
 #Checks for the win condition after each move.

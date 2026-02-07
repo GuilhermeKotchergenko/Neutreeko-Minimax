@@ -47,9 +47,22 @@ def evaluate_medium(board, player):
     return score
 
 def minimax(board, depth, player, is_maximizing_player, evaluate_function, alpha=float('-inf'), beta=float('inf')):
-    if depth == 0 or check_win(board, player):
+    # Check for immediate wins for either player
+    # If the previous player won, the game is over.
+    # We prefer winning sooner (depth added) and delaying loss (depth subtracted)
+    if check_win(board, 1):
+        return 100000 + depth, None 
+    if check_win(board, 2):
+        return -100000 - depth, None 
+
+    if depth == 0:
+        # Evaluate from the perspective of the maximizing player (Player 1)
+        # If is_maximizing_player is True, we want positive score for P1.
+        # If is_maximizing_player is False, we want negative score for P1 (since P2 is minimizing).
+        # Assuming evaluate_function returns +score if 'player' has advantage:
         score = evaluate_function(board, player)
-        print(f"Depth: {depth}, Score: {score}, Board: {board}")  # Debugging output
+        if not is_maximizing_player:
+            score = -score
         return score, None
 
     if is_maximizing_player:
@@ -58,8 +71,9 @@ def minimax(board, depth, player, is_maximizing_player, evaluate_function, alpha
         for move in get_possible_moves(board, player):
             new_board = [row[:] for row in board]
             move_piece(new_board, player, move[0], move[1])
+            # Pass turn to opponent (false)
             eval, _ = minimax(new_board, depth - 1, 3 - player, False, evaluate_function, alpha, beta)
-            print(f"Maximizing - Player {player}: Move {move}, Eval {eval}")  # Debugging output
+            
             if eval > max_eval:
                 max_eval = eval
                 best_move = move
@@ -70,11 +84,14 @@ def minimax(board, depth, player, is_maximizing_player, evaluate_function, alpha
     else:
         min_eval = float('inf')
         best_move = None
-        for move in get_possible_moves(board, 3 - player):
+        # Use 'player' argument, NOT '3 - player'.
+        # 'player' is already the correct ID for the minimizing player here.
+        for move in get_possible_moves(board, player):
             new_board = [row[:] for row in board]
-            move_piece(new_board, 3 - player, move[0], move[1])
-            eval, _ = minimax(new_board, depth - 1, player, True, evaluate_function, alpha, beta)
-            print(f"Minimizing - Player {player}: Move {move}, Eval {eval}")  # Debugging output
+            move_piece(new_board, player, move[0], move[1])
+            # Pass turn back to main player (true)
+            eval, _ = minimax(new_board, depth - 1, 3 - player, True, evaluate_function, alpha, beta)
+            
             if eval < min_eval:
                 min_eval = eval
                 best_move = move

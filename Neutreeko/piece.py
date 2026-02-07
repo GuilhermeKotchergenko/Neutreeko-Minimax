@@ -1,4 +1,4 @@
-from pygame import *
+
 from .constants import *
 
 #Function to allow for piece movement
