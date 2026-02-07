@@ -7,62 +7,124 @@ def evaluate_easy(board, player):
     return random.randint(-10, 10)
 
 # Hard and Medium difficulties
+# Hard and Medium difficulties
+# Precompute segments for 5x5 board (Length 3)
+SEGMENTS = []
+# Horizontal segments
+for r in range(5):
+    for c in range(3):
+        SEGMENTS.append([(r,c), (r,c+1), (r,c+2)])
+# Vertical segments
+for c in range(5):
+    for r in range(3):
+        SEGMENTS.append([(r,c), (r+1,c), (r+2,c)])
+# Diagonal (Down-Right)
+for r in range(3):
+    for c in range(3):
+        SEGMENTS.append([(r,c), (r+1,c+1), (r+2,c+2)])
+# Diagonal (Up-Right) / Anti-Diagonal
+for r in range(2, 5):
+    for c in range(3):
+        SEGMENTS.append([(r,c), (r-1,c+1), (r-2,c+2)])
+
 def evaluate_medium(board, player):
     score = 0
     opponent = 3 - player
-    directions = [(0, 1), (1, 0), (1, 1), (-1, 1)]
-    max_score = 10000  
+    
+    # Heuristic Weights
+    WEIGHT_2_UNBLOCKED = 200    # 2 pieces connected with empty space to complete 3
+    WEIGHT_CENTER = 5           # Control of center squares
 
-    # Immediate win check
-    for x in range(5):
-        for y in range(5):
-            for dx, dy in directions:
-                if x + 2*dx < 5 and y + 2*dy < 5 and x + 2*dx >= 0 and y + 2*dy >= 0:
-                    if board[x][y] == player and board[x + dx][y + dy] == player and board[x + 2*dx][y + 2*dy] == player:
-                        return max_score  # Immediate win for player
-                    if board[x][y] == opponent and board[x + dx][y + dy] == opponent and board[x + 2*dx][y + 2*dy] == opponent:
-                        return -max_score  # Block immediate win for opponent
+    # 1. Analyze all precomputed segments
+    for seg in SEGMENTS:
+        # Get piece values directly
+        p1 = board[seg[0][0]][seg[0][1]]
+        p2 = board[seg[1][0]][seg[1][1]]
+        p3 = board[seg[2][0]][seg[2][1]]
+        
+        # Count occurrences manually for speed
+        p_count = 0
+        o_count = 0
+        e_count = 0
+        
+        if p1 == player: p_count += 1
+        elif p1 == opponent: o_count += 1
+        else: e_count += 1
+            
+        if p2 == player: p_count += 1
+        elif p2 == opponent: o_count += 1
+        else: e_count += 1
+            
+        if p3 == player: p_count += 1
+        elif p3 == opponent: o_count += 1
+        else: e_count += 1
 
-    # Threat detection and blocking
-    for x in range(5):
-        for y in range(5):
-            if board[x][y] == player or board[x][y] == opponent:
-                current_player = board[x][y]
-                for dx, dy in directions:
-                    if x + 3*dx < 5 and y + 3*dy < 5 and x + 3*dx >= 0 and y + 3*dy >= 0:
-                        if board[x + dx][y + dy] == current_player and board[x + 2*dx][y + 2*dy] == current_player and board[x + 3*dx][y + 3*dy] == 0:
-                            if current_player == player:
-                                score += 85
-                            else:
-                                score -= 100
+        # If segment has both player and opponent, it's useless
+        if p_count > 0 and o_count > 0:
+            continue
+        
+        # Player potential
+        if p_count == 3:
+            return 10000 
+        elif p_count == 2: # and e_count == 1 implicit
+            score += WEIGHT_2_UNBLOCKED
+        elif p_count == 1: # and e_count == 2 implicit
+            score += 10 
+            
+        # Opponent threats (Negative score)
+        if o_count == 3:
+            return -10000
+        elif o_count == 2:
+            score -= WEIGHT_2_UNBLOCKED * 1.5 
+        elif o_count == 1:
+            score -= 10
 
-    # Center control
-    center_positions = [(1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3)]
-    for x, y in center_positions:
-        if board[x][y] == player:
-            score += 3
-        elif board[x][y] == opponent:
-            score -= 3
+    # 2. Center Control
+    # Center 3x3 area is valuable for mobility
+    # Manually check center positions ((1,1) to (3,3))
+    for r in range(1, 4):
+        for c in range(1, 4):
+            val = board[r][c]
+            if val == player:
+                score += WEIGHT_CENTER
+            elif val == opponent:
+                score -= WEIGHT_CENTER
 
     return score
 
 def minimax(board, depth, player, is_maximizing_player, evaluate_function, alpha=float('-inf'), beta=float('inf')):
-    # Check for immediate wins for either player
-    # If the previous player won, the game is over.
-    # We prefer winning sooner (depth added) and delaying loss (depth subtracted)
-    if check_win(board, 1):
+    # Determine who is the maximizing player relative to this recursion
+    # If is_maximizing_player is True, 'player' is Max.
+    # If is_maximizing_player is False, 'player' is Min.
+    
+    # We want to return +Score if Max wins, -Score if Min wins.
+    # Note: 'player' is the player whose turn it is currently.
+    
+    max_player = player if is_maximizing_player else (3 - player) 
+    min_player = (3 - player) if is_maximizing_player else player
+    
+    # If Max Player won (or Min Player lost previous turn), return +Inf
+    if check_win(board, max_player):
         return 100000 + depth, None 
-    if check_win(board, 2):
+        
+    # If Min Player won (or Max Player lost previous turn), return -Inf
+    if check_win(board, min_player):
         return -100000 - depth, None 
 
     if depth == 0:
-        # Evaluate from the perspective of the maximizing player (Player 1)
-        # If is_maximizing_player is True, we want positive score for P1.
-        # If is_maximizing_player is False, we want negative score for P1 (since P2 is minimizing).
-        # Assuming evaluate_function returns +score if 'player' has advantage:
+        # Evaluate from the perspective of the maximizing player
+        # evaluate_function(board, p) returns +Score if p is winning.
+        
+        # We always want the score relative to max_player.
+        # But evaluate_function takes 'player' argument.
+        # If we are maximizing, current 'player' is max_player.
+        # If we are minimizing, current 'player' is min_player.
+        
         score = evaluate_function(board, player)
+        
         if not is_maximizing_player:
             score = -score
+            
         return score, None
 
     if is_maximizing_player:
