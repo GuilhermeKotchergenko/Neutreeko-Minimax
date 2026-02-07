@@ -1,43 +1,49 @@
-Neutreeko
-Bem-vindo ao Neutreeko (temátizado em volta da personagem Tia), um jogo de estratégia baseado em tabuleiro onde o objetivo é alinhar três de suas peças, seja horizontal, vertical ou diagonalmente.
+# Neutreeko AI
 
+This repository contains a Python implementation of the abstract strategy board game **Neutreeko**, featuring an artificial intelligence (AI) opponent. The project was developed as part of the *Artificial Intelligence and Data Science Elements* course at the Faculty of Sciences, University of Porto (FCUP).
 
-Pré-requisitos:
-Para executar este jogo, você precisará ter Python instalado em seu sistema, bem como a biblioteca Pygame. 
-O jogo foi desenvolvido e testado com Python 3.8 e Pygame 2.0.1 para o curso de Elementos de Inteligência Artificial e Ciência de Dados da Faculdade de Ciências da Universidade do Porto.
+## Features
 
+- **Game Modes**:
+  - **Player vs Player**: Play locally against a friend on the same machine.
+  - **Player vs AI**: Challenge the computer with adjustable difficulty levels.
+- **AI Algorithm**: Utilizes Minimax with Alpha-Beta pruning for strategic decision-making.
+- **Theme**: Includes a custom character theme ("Tia").
+- **Graphics**: Built using the Pygame library.
 
-Instalação do Python:
-Visite python.org para baixar e instalar a versão mais recente do Python. Certifique-se de adicionar o Python ao seu PATH se estiver usando Windows.
+## Prerequisites
 
+Ensure you have the following installed on your system:
+- **Python 3.8+**
+- **Pygame 2.0.1+**
 
-Instalação do Pygame:
-Após instalar o Python, você pode instalar o Pygame usando pip. Abra seu terminal ou prompt de comando e execute o seguinte comando:
+## Installation
 
-"pip install pygame"
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/GuilhermeKotchergenko/ElementosIACD.git
+    cd ElementosIACD
+    ```
 
+2.  **Install dependencies**:
+    ```bash
+    pip install pygame
+    ```
 
-Para executar o jogo, siga os passos abaixo:
+## How to Run
 
-• Descompacte o arquivo Tia Neutreeko.zip.
-• Navegue até o diretório descompactado usando o terminal ou prompt de comando.
-• Certifique-se de estar no diretório correto e Execute o jogo com o seguinte comando:
+Execute the main script to launch the game:
 
-"python main.py"
+```bash
+python main.py
+```
 
-Como jogar:
+## How to Play
 
-Ao iniciar o jogo, você será apresentado a um menu onde pode escolher jogar contra outra pessoa ou contra uma IA. Se escolher jogar contra a IA, você poderá selecionar a dificuldade. Use o mouse para fazer suas jogadas no tabuleiro clicando na peça que deseja mover e depois em um dos quadrados indicados para onde deseja movê-la.
+1.  **Objective**: Align three of your pieces horizontally, vertically, or diagonally.
+2.  **Movement**: Pieces slide in one of the eight directions until they hit an obstacle (another piece or the board edge).
+3.  **Controls**: Use the mouse to select a piece, then click on a highlighted valid destination to move it.
 
-Controles
+---
 
-• Menu de Seleção: Use o Mouse para clicar nas opções do menu para escolher o modo de jogo e a dificuldade.
-• Jogo: Use o mouse para interagir com o tabuleiro, selecionando as peças a serem movidas e os locais.
-
-
-Informações Adicionais:
-Este jogo foi desenvolvido como parte de um projeto educacional portanto contém erros e ainda é necessário melhorias. No momento ele inclui dificuldades de IA e suporta jogabilidade de jogador único ou dois jogadores.
-
-Para mais informações entre em contato com os desenvolvedores.
-@
-Bom jogo!
+*This project is for educational purposes.*
